@@ -4,8 +4,8 @@ import { esc, ic, header, sheet, stepRow, bindControls, celebrate, bars, num, $,
 
 const OZ = 29.5735;
 const DRINKS = [
-  { e: '💧', n: 'Sip', ml: 100, oz: 4 }, { e: '🥛', n: 'Glass', ml: 250, oz: 8 }, { e: '🍶', n: 'Bottle', ml: 500, oz: 16.9 },
-  { e: '☕', n: 'Coffee', ml: 200, oz: 8 }, { e: '🍵', n: 'Tea', ml: 250, oz: 8 }, { e: '🥤', n: 'Large', ml: 750, oz: 24 },
+  { i: 'drop', s: 0.6, n: 'Sip', ml: 100, oz: 4 }, { i: 'drop', s: 0.8, n: 'Glass', ml: 250, oz: 8 }, { i: 'drop', s: 1, n: 'Bottle', ml: 500, oz: 16.9 },
+  { i: 'cup', s: 0.85, n: 'Coffee', ml: 200, oz: 8 }, { i: 'cup', s: 0.85, n: 'Tea', ml: 250, oz: 8 }, { i: 'drop', s: 1.2, n: 'Large', ml: 750, oz: 24 },
 ];
 const isOz = () => S.goals.unit === 'oz';
 const U = () => isOz() ? 'oz' : 'ml';
@@ -52,7 +52,7 @@ export default {
       const t = total(dk()), g = S.goals.water;
       el.innerHTML = `<div class="metric"><div class="big">${show(t)}<small>/ ${show(g)} ${U()}</small></div>${t >= g ? '<span class="pill">Goal reached</span>' : ''}</div>
 <div class="bar"><i style="width:${Math.min(100, t / g * 100)}%"></i></div>
-<div class="btns">${[1, 2, 0].map(i => `<button class="btn soft sm" data-add="${i}">${DRINKS[i].e} ${DRINKS[i].n}</button>`).join('')}<button class="icon-btn sm" data-undo aria-label="Undo last drink">${ic('undo')}</button></div>`;
+<div class="btns">${[1, 2, 0].map(i => `<button class="btn soft sm" data-add="${i}">+ ${DRINKS[i].n}</button>`).join('')}<button class="icon-btn sm" data-undo aria-label="Undo last drink">${ic('undo')}</button></div>`;
       $$('[data-add]', el).forEach(b => b.onclick = () => {
         const before = total(dk()), d = DRINKS[+b.dataset.add]; add(size(d), d.n); draw(); ctx.changed();
         if (before < S.goals.water && total(dk()) >= S.goals.water) celebrate($('.bar', el), 'var(--c-hydrate)');
@@ -73,7 +73,7 @@ export default {
 </div><div class="glass-pct">${Math.round(t / g * 100)}%</div></div></div>
 <div class="center"><div class="big">${show(t)}<small>/ ${show(g)} ${U()}</small></div>
 <p class="muted">${t >= g ? 'Goal reached. Nicely done.' : `${show(g - t)} ${U()} to go, about ${Math.ceil((g - t) / size(DRINKS[1]))} more glasses`}</p></div>
-<div class="drinks">${DRINKS.map((d, i) => `<button data-add="${i}"><span>${d.e}</span>${d.n}<small>${show(size(d))} ${U()}</small></button>`).join('')}</div>
+<div class="drinks">${DRINKS.map((d, i) => `<button data-add="${i}"><span style="--s:${d.s}">${ic(d.i)}</span>${d.n}<small>${show(size(d))} ${U()}</small></button>`).join('')}</div>
 <form class="custom-add" data-custom><input class="input" type="number" inputmode="decimal" min="1" placeholder="Custom amount" aria-label="Custom amount in ${U()}"><span>${U()}</span><button class="btn soft">Add</button></form>
 <section class="card"><div class="card-h"><h3>This week</h3></div>${bars(lastDays(7).map(d => ({ k: d, v: total(d) / g })))}</section>
 ${L.length ? `<h2 class="sec-t">Today's log</h2><div class="list">${L.map((e, i) => ({ e, i })).reverse().map(({ e, i }) => `<div class="row"><div class="grow">${esc(e.n)}<small>${new Date(e.t).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}</small></div><b>${show(e.ml)} ${U()}</b><button class="icon-btn sm ghost" data-del="${i}" aria-label="Remove">${ic('x')}</button></div>`).join('')}</div>` : ''}`;

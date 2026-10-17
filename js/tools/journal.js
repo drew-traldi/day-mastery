@@ -37,7 +37,7 @@ export default {
     const e = days.map(entry).filter(has), moods = e.map(x => x.mood).filter(Boolean);
     if (!e.length) return 'No check-ins yet';
     const avg = moods.length ? MOODS[Math.round(moods.reduce((a, b) => a + b, 0) / moods.length) - 1] : null;
-    return `${e.length} check-in${e.length === 1 ? '' : 's'}${avg ? ` · mostly ${avg.e} ${avg.n.toLowerCase()}` : ''}`;
+    return `${e.length} check-in${e.length === 1 ? '' : 's'}${avg ? ` · mostly ${avg.n.toLowerCase()}` : ''}`;
   },
 
   card(el, ctx) {
@@ -67,7 +67,7 @@ ${dayNav(k)}
   <div class="saved muted" id="saved"></div>
 </section>
 <section class="card"><div class="card-h"><h3>Last two weeks</h3></div><div class="mood-strip">${strip.map(x => { const m = entry(x)?.mood; return `<button data-k="${x}" class="${x === k ? 'sel' : ''}"><span>${m ? MOODS[m - 1].e : '·'}</span><small>${wd(x)}</small></button>`; }).join('')}</div></section>
-${past.length ? `<h2 class="sec-t">Past entries</h2><div class="list">${past.map(x => { const e = entry(x); return `<button class="row link" data-k="${x}"><span class="em">${e.mood ? MOODS[e.mood - 1].e : '📝'}</span><div class="grow"><b>${dayLabel(x)}</b><small class="clip">${esc(e.text?.trim() || (e.tags || []).join(', ') || MOODS[e.mood - 1]?.n || '')}</small></div>${ic('chevR')}</button>`; }).join('')}</div>` : ''}`;
+${past.length ? `<h2 class="sec-t">Past entries</h2><div class="list">${past.map(x => { const e = entry(x); return `<button class="row link" data-k="${x}"><span class="em">${e.mood ? MOODS[e.mood - 1].e : ic('book')}</span><div class="grow"><b>${dayLabel(x)}</b><small class="clip">${esc(e.text?.trim() || (e.tags || []).join(', ') || MOODS[e.mood - 1]?.n || '')}</small></div>${ic('chevR')}</button>`; }).join('')}</div>` : ''}`;
       bindMoods(el, k);
       $$('[data-tag]', el).forEach(b => b.onclick = () => {
         const e = ensure(k), t = b.dataset.tag;

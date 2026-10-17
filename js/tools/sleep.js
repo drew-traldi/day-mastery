@@ -2,7 +2,8 @@
 import { S, dk, lastDays, save } from '../store.js';
 import { ic, header, sheet, stepRow, timeRow, bindControls, dur, timeLabel, dayLabel, bars, $, $$ } from '../ui.js';
 
-const Q = [{ e: '😫', n: 'Exhausted' }, { e: '😪', n: 'Tired' }, { e: '😐', n: 'Okay' }, { e: '🙂', n: 'Rested' }, { e: '🤩', n: 'Great' }];
+const Q = [{ n: 'Exhausted' }, { n: 'Tired' }, { n: 'Okay' }, { n: 'Rested' }, { n: 'Great' }];
+const meter = q => '<i class="meter">' + [1, 2, 3, 4, 5].map(i => '<b class="' + (i <= q ? 'on' : '') + '"></b>').join('') + '</i>';
 const mins = hhmm => { const [h, m] = hhmm.split(':').map(Number); return h * 60 + m; };
 const hhmm = m => { m = ((Math.round(m) % 1440) + 1440) % 1440; return `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`; };
 export const hours = e => { let d = mins(e.wake) - mins(e.bed); if (d <= 0) d += 1440; return d / 60; };
@@ -40,7 +41,7 @@ export default {
       const e = entry(dk());
       if (e) {
         const h = hours(e);
-        el.innerHTML = `<div class="metric"><div class="big">${dur(h * 60)}<small>last night</small></div>${e.q ? `<span class="pill">${Q[e.q - 1].e} ${Q[e.q - 1].n}</span>` : ''}</div>
+        el.innerHTML = `<div class="metric"><div class="big">${dur(h * 60)}<small>last night</small></div>${e.q ? `<span class="pill">${Q[e.q - 1].n}</span>` : ''}</div>
 <div class="bar"><i style="width:${Math.min(100, h / S.goals.sleepHours * 100)}%"></i></div>
 <p class="muted">Tonight, aim for bed by <b>${tonight()}</b> to wake at ${timeLabel(S.goals.wake)}.</p>`;
       } else {
@@ -66,14 +67,14 @@ export default {
 <section class="night"><div class="stars">${stars()}</div><div class="moon"></div>
   <div class="n-lbl">Last night</div>
   <div class="n-big">${last ? dur(hours(last) * 60) : 'Not logged'}</div>
-  ${last?.q ? `<div class="n-q">${Q[last.q - 1].e} ${Q[last.q - 1].n}</div>` : ''}
+  ${last?.q ? `<div class="n-q">${meter(last.q)} ${Q[last.q - 1].n}</div>` : ''}
   <div class="n-tip">Tonight, aim for bed by <b>${tonight()}</b></div>
 </section>
 <section class="card" style="--c:var(--c-sleep)">
   <div class="card-h"><h3>${sel === dk() ? 'Log last night' : `Night before ${dayLabel(sel)}`}</h3>${sel !== dk() ? `<button class="more" data-today>Back to today</button>` : ''}</div>
   <div class="two"><label class="field"><span>Went to bed</span><input type="time" id="bed" value="${e?.bed || lastBed()}"></label><label class="field"><span>Woke up</span><input type="time" id="wake" value="${e?.wake || S.goals.wake}"></label></div>
   <div class="lbl">How rested do you feel?</div>
-  <div class="qrow">${Q.map((q, i) => `<button data-q="${i + 1}" class="${e?.q === i + 1 ? 'on' : ''}"><span>${q.e}</span><small>${q.n}</small></button>`).join('')}</div>
+  <div class="qrow">${Q.map((q, i) => `<button data-q="${i + 1}" class="${e?.q === i + 1 ? 'on' : ''}">${meter(i + 1)}<small>${q.n}</small></button>`).join('')}</div>
   <div class="row-btns"><span class="muted grow" id="dur"></span>${e ? '<button class="btn ghost" data-clear>Clear</button>' : ''}<button class="btn pri" data-save>${e ? 'Update' : 'Save'}</button></div>
 </section>
 <section class="card" style="--c:var(--c-sleep)"><div class="card-h"><h3>This week</h3><span class="muted">${logged.length ? `avg ${dur(avg * 60)}` : ''}</span></div>

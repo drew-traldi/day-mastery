@@ -4,9 +4,9 @@ import { S, save } from '../store.js';
 import { esc, ic, header, sheet, audio, clock, $, $$ } from '../ui.js';
 
 export const LAYERS = [
-  { k: 'rain', n: 'Rain', e: '🌧️' }, { k: 'waves', n: 'Ocean', e: '🌊' }, { k: 'wind', n: 'Wind', e: '🌬️' },
-  { k: 'fire', n: 'Campfire', e: '🔥' }, { k: 'brown', n: 'Brown noise', e: '🟤' }, { k: 'pink', n: 'Pink noise', e: '🌸' },
-  { k: 'white', n: 'White noise', e: '⚪' }, { k: 'drone', n: 'Om drone', e: '🕉️' }, { k: 'binaural', n: 'Alpha waves', e: '🧠' },
+  { k: 'rain', n: 'Rain', i: 'rain' }, { k: 'waves', n: 'Ocean', i: 'waves' }, { k: 'wind', n: 'Wind', i: 'wind' },
+  { k: 'fire', n: 'Campfire', i: 'flame' }, { k: 'brown', n: 'Brown noise', i: 'lines' }, { k: 'pink', n: 'Pink noise', i: 'lines' },
+  { k: 'white', n: 'White noise', i: 'lines' }, { k: 'drone', n: 'Om drone', i: 'orbit' }, { k: 'binaural', n: 'Alpha waves', i: 'headphones' },
 ];
 const PRESETS = {
   'Deep focus': { brown: 0.55, binaural: 0.25 }, 'Rainy café': { rain: 0.6, brown: 0.2, fire: 0.3 }, 'Beach': { waves: 0.8, wind: 0.25 },
@@ -162,7 +162,7 @@ export default {
 ${Object.keys(saved).map(p => `<span class="chip mine ${S.sounds.preset === p ? 'on' : ''}"><button data-mine="${esc(p)}">★ ${esc(p)}</button><button data-rm="${esc(p)}" aria-label="Remove ${esc(p)}">${ic('x')}</button></span>`).join('')}
 <button class="chip add" data-savemix>${ic('plus')} Save this mix</button></div>
 <h2 class="sec-t">Layers</h2>
-<div class="layers">${LAYERS.map(l => { const L = layer(l.k); return `<div class="layer ${L.on ? 'on' : ''}" data-k="${l.k}"><button data-toggle="${l.k}"><span class="le">${l.e}</span><span>${l.n}</span></button><input type="range" min="0" max="1" step="0.01" value="${L.v}" data-vol="${l.k}" aria-label="${l.n} volume"></div>`; }).join('')}</div>
+<div class="layers">${LAYERS.map(l => { const L = layer(l.k); return `<div class="layer ${L.on ? 'on' : ''}" data-k="${l.k}"><button data-toggle="${l.k}"><span class="le">${ic(l.i)}</span><span>${l.n}</span></button><input type="range" min="0" max="1" step="0.01" value="${L.v}" data-vol="${l.k}" aria-label="${l.n} volume"></div>`; }).join('')}</div>
 <p class="hint">Sound keeps playing while you use other tools. Alpha waves work best with headphones.</p>`;
       $('[data-pp]', el).onclick = toggle;
       $('#mv', el).oninput = e => { S.sounds.master = +e.target.value; save(); if (master) schedule(); };

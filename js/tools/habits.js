@@ -83,7 +83,7 @@ export default {
       const k = dk(), l = list();
       el.innerHTML = l.length ? `<div class="hlist">${l.map((h, i) => {
         const s = streak(h);
-        return `<button class="hrow ${h.days[k] ? 'done' : ''}" data-i="${i}" style="--hc:${h.color}"><span class="hcheck">${ic('check')}</span><span class="hname">${esc(h.emoji)} ${esc(h.name)}</span>${s ? `<span class="hstreak">${ic('flame')}${s}</span>` : ''}</button>`;
+        return `<button class="hrow ${h.days[k] ? 'done' : ''}" data-i="${i}" style="--hc:${h.color}"><span class="hcheck">${ic('check')}</span><span class="hname">${esc(h.name)}</span>${s ? `<span class="hstreak">${ic('flame')}${s}</span>` : ''}</button>`;
       }).join('')}</div>` : `<p class="muted">Small daily habits add up. Add your first one.</p><button class="btn soft sm" data-add>${ic('plus')} Add a habit</button>`;
       $$('.hrow', el).forEach(b => b.onclick = () => {
         const h = l[+b.dataset.i]; toggle(h, k); draw(); ctx.changed();

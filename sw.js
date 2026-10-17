@@ -1,6 +1,6 @@
 // Offline support. Bump VERSION whenever you publish, so phones pick up the new files.
 // The app shows an "Update" button when a new version is ready.
-const VERSION = 'dm-94bdb7f57a';
+const VERSION = 'dm-e4bfc0c37c';
 const FONTS = 'dm-fonts';
 const ASSETS = [
   './', 'index.html', 'manifest.webmanifest', 'css/app.css',
